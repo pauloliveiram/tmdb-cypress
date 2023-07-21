@@ -132,3 +132,5 @@ dist
 # Allure
 allure-results/
 allure-report/
+
+screenshots/

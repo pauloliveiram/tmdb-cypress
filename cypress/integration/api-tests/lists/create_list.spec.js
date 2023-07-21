@@ -16,7 +16,7 @@ describe('Validar o enpoint POST /list', () => {
       url: '/list',
       headers: {'Authorization': 'Bearer ' + Cypress.env('AUTH_TOKEN')},
       body: { "name": "Teste da automação",
-              "description": "Lista criada para que os testes automatizados sejam executados.",
+              "description": "",
               "language": "pt-br" }
     }).as('postCreateList')
     cy.get('@postCreateList').then(response => {
