@@ -2,24 +2,24 @@ name: Testes da API do TMDB com Cypress e Allure Report
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Install dependencies from package.json
         run: npm install
-        
+
       - name: Run tests
-        env: 
+        env:
           CYPRESS_AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
         run: npm run tests
-        
+
       - name: Get Allure history
         uses: actions/checkout@v2
         if: always()
