@@ -1,0 +1,19 @@
+{
+  "name": "tmdb-cypress",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean:folders": "rm -R -f allure-report/* && rm -R -f allure-results/*",
+    "tests": "cypress run —-env allure=true --reporter mocha-allure-reporter",
+    "allure-report": "allure generate --clean && allure open"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.40.0",
+    "allure-commandline": "^2.23.0",
+    "cypress": "^12.17.1",
+    "mocha-allure-reporter": "^1.4.0"
+  }
+}
