@@ -1,17 +1,39 @@
 describe("Validar o endpoint POST /list/add_movie", () => {
+  let listId;
+
+  before(() => {
+    cy.request({
+      method: "POST",
+      url: "/list",
+      headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
+      body: { name: "Teste da automação", description: "", language: "pt-br" },
+    }).then((response) => {
+      listId = response.body.list_id;
+    });
+  });
+
   afterEach(() => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/remove_item",
+      url: `/list/${listId}/remove_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: 26 },
+    });
+  });
+
+  after(() => {
+    cy.request({
+      method: "DELETE",
+      url: `list/${listId}`,
+      headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
+      failOnStatusCode: false,
     });
   });
 
   it("Validar adição de filme na lista com sucesso", () => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/add_item",
+      url: `/list/${listId}/add_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: 26 },
     }).as("postAddMovie");
@@ -28,13 +50,13 @@ describe("Validar o endpoint POST /list/add_movie", () => {
   it("Validar erro ao tentar adicionar o mesmo filme mais de uma vez", () => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/add_item",
+      url: `/list/${listId}/add_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: 26 },
     });
     cy.request({
       method: "POST",
-      url: "/list/8260674/add_item",
+      url: `/list/${listId}/add_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: 26 },
       failOnStatusCode: false,
@@ -52,7 +74,7 @@ describe("Validar o endpoint POST /list/add_movie", () => {
   it("Validar erro ao adicionar o filme sem estar autorizado", () => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/add_item",
+      url: `/list/${listId}/add_item`,
       body: { media_id: 26 },
       failOnStatusCode: false,
     }).as("postAddMovie");
@@ -69,7 +91,7 @@ describe("Validar o endpoint POST /list/add_movie", () => {
   it("Validar erro ao adicionar filme inválido", () => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/add_item",
+      url: `/list/${listId}/add_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: "inv" },
       failOnStatusCode: false,

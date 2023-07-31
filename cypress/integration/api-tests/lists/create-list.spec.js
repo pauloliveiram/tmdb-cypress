@@ -1,10 +1,10 @@
 describe("Validar o enpoint POST /list", () => {
-  let list_id;
+  let listId;
 
   after(() => {
     cy.request({
       method: "DELETE",
-      url: `list/${list_id}`,
+      url: `list/${listId}`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       failOnStatusCode: false,
     });
@@ -18,7 +18,7 @@ describe("Validar o enpoint POST /list", () => {
       body: { name: "Teste da automação", description: "", language: "pt-br" },
     }).as("postCreateList");
     cy.get("@postCreateList").then((response) => {
-      list_id = response.body.list_id;
+      listId = response.body.list_id;
       expect(response.status).to.be.eql(201);
       expect(response.body.status_code).to.be.eql(1);
       expect(response.body.status_message).to.be.eql(

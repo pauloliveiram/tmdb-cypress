@@ -1,7 +1,7 @@
 describe("Validar o endpoint account/{account_id}/lists", () => {
   it("Validar o método GET", () => {
     cy.request({
-      url: "/account/9961072/lists",
+      url: "/account/{account_id}/lists",
       headers: {
         Authorization: "Bearer " + Cypress.env("AUTH_TOKEN"),
       },

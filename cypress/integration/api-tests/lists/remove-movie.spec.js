@@ -1,8 +1,21 @@
 describe("Validar o endpoint POST /list/{list_id}/remove_item", () => {
+  let listId;
+
+  before(() => {
+    cy.request({
+      method: "POST",
+      url: "/list",
+      headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
+      body: { name: "Teste da automação", description: "", language: "pt-br" },
+    }).then((response) => {
+      listId = response.body.list_id;
+    });
+  });
+
   beforeEach(() => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/add_item",
+      url: `/list/${listId}/add_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: 12 },
     });
@@ -11,7 +24,7 @@ describe("Validar o endpoint POST /list/{list_id}/remove_item", () => {
   afterEach(() => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/remove_item",
+      url: `/list/${listId}/remove_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: 12 },
     });
@@ -20,7 +33,7 @@ describe("Validar o endpoint POST /list/{list_id}/remove_item", () => {
   it("Validar remoção de filme da lista com sucesso", () => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/remove_item",
+      url: `/list/${listId}/remove_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: 12 },
     }).as("postRemoveMovie");
@@ -37,7 +50,7 @@ describe("Validar o endpoint POST /list/{list_id}/remove_item", () => {
   it("Validar erro ao remover um filme que não está contido na lista", () => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/remove_item",
+      url: `/list/${listId}/remove_item`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       body: { media_id: 10 },
     }).as("postRemoveMovie");
@@ -54,7 +67,7 @@ describe("Validar o endpoint POST /list/{list_id}/remove_item", () => {
   it("Validar erro ao remover um filme sem estar com o token de autorização", () => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/remove_item",
+      url: `/list/${listId}/remove_item`,
       body: { media_id: 10 },
       failOnStatusCode: false,
     }).as("postRemoveMovie");

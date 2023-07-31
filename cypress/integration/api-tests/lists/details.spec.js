@@ -1,25 +1,36 @@
 describe("Validar o endpoint /list/{list_id}", () => {
+  let listId;
+
   before(() => {
     cy.request({
       method: "POST",
-      url: "/list/8260674/add_item",
+      url: "/list",
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
-      body: { media_id: 12 },
+      body: { name: "Teste da automação", description: "", language: "pt-br" },
+    }).then((response) => {
+      listId = response.body.list_id;
     });
   });
 
   after(() => {
     cy.request({
-      method: "POST",
-      url: "/list/8260674/remove_item",
+      method: "DELETE",
+      url: `list/${listId}`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
-      body: { media_id: 12 },
+      failOnStatusCode: false,
     });
   });
 
   it("Validar o método GET", () => {
     cy.request({
-      url: "/list/8260674",
+      method: "POST",
+      url: `/list/${listId}/add_item`,
+      headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
+      body: { media_id: 12 },
+    });
+
+    cy.request({
+      url: `/list/${listId}`,
       headers: {
         Authorization: "Bearer " + Cypress.env("AUTH_TOKEN"),
       },

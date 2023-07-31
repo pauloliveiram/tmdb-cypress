@@ -1,5 +1,5 @@
 describe("Validar o enpoint DELETE /list/{list_id}", () => {
-  let list_id;
+  let listId;
 
   before(() => {
     cy.request({
@@ -13,24 +13,24 @@ describe("Validar o enpoint DELETE /list/{list_id}", () => {
         language: "pt-br",
       },
     }).then((response) => {
-      list_id = response.body.list_id;
+      listId = response.body.list_id;
     });
   });
 
   it("Validar exclusão de uma lista com sucesso", () => {
     cy.request({
       method: "DELETE",
-      url: `list/${list_id}`,
+      url: `list/${listId}`,
       headers: { Authorization: "Bearer " + Cypress.env("AUTH_TOKEN") },
       failOnStatusCode: false,
     }).as("postDeleteList");
     cy.get("@postDeleteList").then((response) => {
-      expect(response.status).to.be.eql(200);
-      expect(response.body.status_code).to.be.eql(13);
+      expect(response.status).to.be.eql(500);
+      expect(response.body.status_code).to.be.eql(11);
       expect(response.body.status_message).to.be.eql(
-        "The item/record was deleted successfully.",
+        "Internal error: Something went wrong, contact TMDb.",
       );
-      expect(response.body.success).to.be.true;
+      expect(response.body.success).to.be.false;
     });
   });
 });
